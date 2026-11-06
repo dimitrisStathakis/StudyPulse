@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StudyPulse — Smart Study Planner</title>
+<style>
+:root{--ink:#20243a;--muted:#747b93;--bg:#f4f5fb;--card:#fff;--purple:#6558d9;--purple2:#eeeaff;--teal:#20a997;--orange:#ef9a45;--red:#df5e70;--line:#e8e9f2;--shadow:0 12px 32px rgba(39,43,83,.08)}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#f2f0ff,#f7f8fc 45%,#edf8f7);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
+.app-shell{min-height:100vh;display:flex;justify-content:center;padding:24px}
+.phone{width:100%;max-width:1120px;min-height:760px;background:var(--bg);border:1px solid #e5e6f1;border-radius:28px;overflow:hidden;box-shadow:0 24px 80px rgba(46,48,95,.14);display:grid;grid-template-columns:225px 1fr}
+.sidebar{background:#fff;border-right:1px solid var(--line);padding:26px 17px;display:flex;flex-direction:column;gap:26px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px;font-weight:850;font-size:20px;letter-spacing:-.6px}.logo{width:37px;height:37px;border-radius:13px;background:linear-gradient(135deg,#7668ed,#4f45b8);display:grid;place-items:center;color:#fff;font-size:20px}
+.nav{display:grid;gap:7px}.nav button{background:transparent;color:#747b93;text-align:left;padding:12px 13px;border-radius:12px;display:flex;gap:12px;align-items:center;font-weight:650}.nav button.active,.nav button:hover{background:var(--purple2);color:var(--purple)}.nav .ico{width:22px;text-align:center;font-size:17px}
+.sidebar-note{margin-top:auto;background:#f5f3ff;border-radius:16px;padding:15px;font-size:12px;color:#6157a5;line-height:1.5}.sidebar-note strong{display:block;font-size:14px;margin-bottom:5px}
+.main{padding:28px 32px 35px;min-width:0}.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:25px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:1.4px;color:var(--purple);text-transform:uppercase}.topbar h1{margin:5px 0 0;font-size:28px;letter-spacing:-1px}.avatar{width:42px;height:42px;border-radius:50%;background:#ffe4d1;color:#9c552a;display:grid;place-items:center;font-weight:850}
+.page{display:none}.page.active{display:block}.welcome{background:linear-gradient(115deg,#6558d9,#8778f1);border-radius:22px;padding:23px 25px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:15px;overflow:hidden;position:relative}.welcome:after{content:"";position:absolute;width:180px;height:180px;border:28px solid rgba(255,255,255,.10);border-radius:50%;right:80px;top:-95px}.welcome h2{font-size:22px;margin:0 0 7px;letter-spacing:-.5px}.welcome p{margin:0;color:#e8e5ff;font-size:13px;line-height:1.55;max-width:390px}.welcome .spark{font-size:48px;z-index:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}.stat,.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.stat{padding:17px}.stat .label{color:var(--muted);font-size:12px;font-weight:650}.stat .value{font-size:27px;font-weight:850;letter-spacing:-1px;margin:8px 0 3px}.stat .sub{font-size:11px;color:var(--muted)}.stat .symbol{float:right;background:var(--purple2);color:var(--purple);border-radius:10px;width:32px;height:32px;display:grid;place-items:center}
+.content-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(270px,.85fr);gap:16px}.card{padding:19px;min-width:0}.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.card h3{font-size:15px;margin:0;letter-spacing:-.2px}.muted{color:var(--muted);font-size:12px}.text-button{background:none;color:var(--purple);font-size:12px;font-weight:800;padding:5px}
+.task-list{display:grid;gap:10px}.task{border:1px solid var(--line);border-radius:13px;padding:12px;display:flex;align-items:center;gap:11px}.task-check{width:22px;height:22px;border:1.5px solid #cfd2e2;border-radius:7px;display:grid;place-items:center;background:#fff;color:#fff;flex-shrink:0}.task.done .task-check{background:var(--teal);border-color:var(--teal)}.task.done .task-name{text-decoration:line-through;color:#969bb0}.task-info{flex:1;min-width:0}.task-name{font-weight:750;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.task-meta{font-size:11px;color:var(--muted);margin-top:4px}.priority{font-size:10px;font-weight:800;border-radius:7px;padding:5px 7px;white-space:nowrap}.high{background:#ffebee;color:#c34a5a}.medium{background:#fff3e4;color:#b76b1d}.low{background:#e5f7f3;color:#188a7d}
+.recommend{background:#f6f4ff;border:1px solid #e8e3ff;border-radius:15px;padding:15px}.recommend .tag{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--purple);font-weight:850}.recommend h4{margin:8px 0 5px;font-size:15px}.recommend p{font-size:12px;color:#74718d;line-height:1.5;margin:0 0 12px}.btn{background:var(--purple);color:#fff;padding:11px 15px;border-radius:11px;font-weight:800;font-size:12px;box-shadow:0 5px 12px rgba(101,88,217,.2)}.btn:hover{filter:brightness(1.06)}.btn.secondary{background:#f0effa;color:var(--purple);box-shadow:none}.btn.danger{background:#fff0f1;color:#bf4656;box-shadow:none}.btn.small{padding:8px 11px}.progress-row{display:flex;justify-content:space-between;font-size:12px;margin:17px 0 8px}.progress{height:8px;border-radius:10px;background:#ececf5;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,#6558d9,#20b5a3);border-radius:10px;transition:width .25s}
+.section-title{margin:0 0 6px;font-size:21px;letter-spacing:-.6px}.section-desc{color:var(--muted);font-size:13px;margin:0 0 20px;line-height:1.5}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.field{display:grid;gap:6px;margin-bottom:13px}.field label{font-size:12px;font-weight:750;color:#565d75}.field input,.field select,.field textarea{width:100%;border:1px solid #dfe1ed;border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px #eeeaff}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-actions{display:flex;gap:9px;flex-wrap:wrap}.empty{padding:25px;text-align:center;color:var(--muted);font-size:13px}.risk-list{display:grid;gap:12px}.risk-item{padding:15px;border:1px solid var(--line);border-radius:14px}.risk-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.risk-name{font-weight:800;font-size:13px}.risk-level{font-size:10px;font-weight:850;padding:5px 8px;border-radius:8px}.risk-level.risk-high{background:#ffebee;color:#c34a5a}.risk-level.risk-medium{background:#fff3e4;color:#b76b1d}.risk-level.risk-low{background:#e5f7f3;color:#188a7d}.risk-item p{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 0 0}.settings-box{max-width:620px}.notice{background:#fff8e9;border:1px solid #ffe5b7;color:#855d1b;border-radius:12px;padding:12px;font-size:12px;line-height:1.5;margin-top:15px}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:#242641;color:#fff;padding:12px 17px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;box-shadow:var(--shadow);z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}.mobile-nav{display:none}
+@media(max-width:800px){.app-shell{padding:0}.phone{border-radius:0;border:0;display:block;min-height:100vh}.sidebar{display:none}.main{padding:22px 16px 95px}.topbar h1{font-size:24px}.welcome{padding:20px}.welcome .spark{font-size:38px}.stats{gap:9px}.stat{padding:13px}.stat .value{font-size:23px}.content-grid{grid-template-columns:1fr}.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom));justify-content:space-around;z-index:5}.mobile-nav button{background:none;color:#858ba0;display:grid;gap:3px;justify-items:center;font-size:10px;padding:5px 9px}.mobile-nav button.active{color:var(--purple);font-weight:800}.mobile-nav span{font-size:19px}.form-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:430px){.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.welcome p{max-width:250px}.form-grid{grid-template-columns:1fr}.priority{display:none}.card{padding:15px}}
+</style>
+</head>
+<body>
+<div class="app-shell"><div class="phone">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">✦</div> StudyPulse</div>
+  <nav class="nav">
+    <button class="active" data-page="dashboard"><span class="ico">⌂</span> Αρχική</button>
+    <button data-page="tasks"><span class="ico">☷</span> Οι εργασίες μου</button>
+    <button data-page="recommendations"><span class="ico">✧</span> Προτάσεις μελέτης</button>
+    <button data-page="prediction"><span class="ico">◷</span> Πρόβλεψη προθεσμιών</button>
+    <button data-page="settings"><span class="ico">⚙</span> Προφίλ & στόχοι</button>
+  </nav>
+  <div class="sidebar-note"><strong>✦ Μικρά βήματα, μεγάλη πρόοδος.</strong>Το StudyPulse σε βοηθά να οργανώνεις τη μελέτη σου με πιο έξυπνο τρόπο.</div>
+</aside>
+<main class="main">
+  <header class="topbar"><div><div class="eyebrow">SMART STUDY PLANNER</div><h1 id="page-title">Καλησπέρα! 👋</h1></div><div class="avatar" id="avatar">Φ</div></header>
+
+  <section class="page active" id="page-dashboard">
+    <div class="welcome"><div><h2>Κάθε λεπτό μετράει.</h2><p>Οργάνωσε τις υποχρεώσεις σου και βρες το επόμενο καλύτερο βήμα για τη μελέτη σου.</p></div><div class="spark">✦</div></div>
+    <div class="stats">
+      <div class="stat"><span class="symbol">☷</span><div class="label">Ενεργές εργασίες</div><div class="value" id="stat-active">4</div><div class="sub">που χρειάζονται προσοχή</div></div>
+      <div class="stat"><span class="symbol">✓</span><div class="label">Ολοκληρωμένες</div><div class="value" id="stat-done">1</div><div class="sub">καλή δουλειά!</div></div>
+      <div class="stat"><span class="symbol">◷</span><div class="label">Χρόνος μελέτης</div><div class="value">2.5h</div><div class="sub">στόχος για σήμερα</div></div>
+    </div>
+    <div class="content-grid">
+      <div class="card"><div class="card-head"><h3>Οι επόμενες υποχρεώσεις</h3><button class="text-button" data-goto="tasks">Όλες οι εργασίες →</button></div><div class="task-list" id="dashboard-tasks"></div></div>
+      <div class="card"><div class="card-head"><h3>Η πρότασή σου για σήμερα</h3><span>✧</span></div><div id="daily-recommendation"></div><div class="progress-row"><span>Εβδομαδιαίος στόχος</span><strong id="progress-label">60%</strong></div><div class="progress"><span id="progress-bar" style="width:60%"></span></div><p class="muted" style="margin-bottom:0">Έχεις κάνει καλή αρχή — συνέχισε σταθερά.</p></div>
+    </div>
+  </section>
+
+  <section class="page" id="page-tasks">
+    <h2 class="section-title">Οι εργασίες μου</h2><p class="section-desc">Κράτησε όλες τις προθεσμίες σε ένα σημείο. Πρόσθεσε νέα εργασία ή σημείωσε ό,τι ολοκλήρωσες.</p>
+    <div class="toolbar"><span class="muted" id="task-count">4 ενεργές εργασίες</span><button class="btn" id="show-add">＋ Νέα εργασία</button></div>
+    <div class="card" id="add-panel" style="display:none;margin-bottom:16px">
+      <div class="card-head"><h3>Προσθήκη εργασίας</h3><button class="text-button" id="hide-add">Κλείσιμο ✕</button></div>
+      <form id="task-form">
+        <div class="field"><label for="task-title">Τίτλος εργασίας</label><input id="task-title" required maxlength="70" placeholder="π.χ. Εργασία στη Στατιστική"/></div>
+        <div class="form-grid">
+          <div class="field"><label for="task-course">Μάθημα</label><input id="task-course" required placeholder="π.χ. Στατιστική"/></div>
+          <div class="field"><label for="task-date">Προθεσμία</label><input id="task-date" type="date" required/></div>
+          <div class="field"><label for="task-hours">Ώρες που απομένουν</label><input id="task-hours" type="number" min="1" max="100" value="3" required/></div>
+          <div class="field"><label for="task-difficulty">Δυσκολία</label><select id="task-difficulty"><option value="1">Εύκολη</option><option value="2" selected>Μέτρια</option><option value="3">Δύσκολη</option></select></div>
+        </div>
+        <div class="form-actions"><button class="btn" type="submit">Αποθήκευση εργασίας</button><button class="btn secondary" type="button" id="cancel-add">Ακύρωση</button></div>
+      </form>
+    </div>
+    <div class="card"><div class="task-list" id="all-tasks"></div></div>
+  </section>
+
+  <section class="page" id="page-recommendations">
+    <h2 class="section-title">Προτάσεις μελέτης ✧</h2><p class="section-desc">Το StudyPulse ιεραρχεί τις εργασίες με βάση την προθεσμία, τη δυσκολία και τον απαιτούμενο χρόνο.</p>
+    <div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Η καλύτερη επόμενη κίνηση</h3><span class="priority high">SMART PICK</span></div><div id="best-pick"></div><button class="btn" id="refresh-recs">↻ Ανανέωση προτάσεων</button></div>
+    <div class="card"><div class="card-head"><h3>Πλάνο μελέτης</h3><span class="muted">Ενδεικτικό πλάνο 3 βημάτων</span></div><div id="study-plan" class="task-list"></div></div>
+    <div class="notice">Πώς λειτουργεί: η προτεραιότητα είναι μια απλή προσομοίωση που συνδυάζει εγγύτητα προθεσμίας, δυσκολία και απαιτούμενες ώρες. Δεν αποτελεί πραγματικό εκπαιδευμένο μοντέλο AI.</div>
+  </section>
+
+  <section class="page" id="page-prediction">
+    <h2 class="section-title">Πρόβλεψη προθεσμιών</h2><p class="section-desc">Μια ενδεικτική εκτίμηση κινδύνου σε βοηθά να δεις ποιες υποχρεώσεις χρειάζονται έγκαιρη προσοχή.</p>
+    <div class="card" style="margin-bottom:16px"><div class="card-head"><h3>Εκτίμηση κινδύνου ανά εργασία</h3><span>◷</span></div><div id="risk-list" class="risk-list"></div></div>
+    <div class="notice">Οι εκτιμήσεις βασίζονται σε απλούς κανόνες demo (ημέρες μέχρι την προθεσμία, ώρες εργασίας και δυσκολία). Δεν είναι πραγματικές προβλέψεις και δεν πρέπει να χρησιμοποιούνται ως εγγύηση ολοκλήρωσης.</div>
+  </section>
+
+  <section class="page" id="page-settings">
+    <h2 class="section-title">Προφίλ & στόχοι</h2><p class="section-desc">Προσαρμόζεις την εμπειρία σου στις δικές σου ανάγκες.</p>
+    <div class="card settings-box"><div class="field"><label for="student-name">Πώς να σε αποκαλούμε;</label><input id="student-name" value="Φοιτητή"/></div><div class="field"><label for="daily-hours">Ημερήσιος στόχος μελέτης</label><select id="daily-hours"><option value="1">1 ώρα</option><option value="2">2 ώρες</option><option value="2.5" selected>2,5 ώρες</option><option value="3">3 ώρες</option><option value="4">4 ώρες</option></select></div><div class="field"><label for="study-style">Προτιμώμενο στυλ</label><select id="study-style"><option>Σύντομες συνεδρίες</option><option>Μεγάλα διαστήματα συγκέντρωσης</option><option>Συνδυασμός</option></select></div><button class="btn" id="save-settings">Αποθήκευση προτιμήσεων</button><div class="notice">Σε αυτή την έκδοση, τα δεδομένα παραμένουν μόνο όσο είναι ανοιχτή η σελίδα. Δεν απαιτείται σύνδεση ή λογαριασμός.</div></div>
+  </section>
+</main>
+<nav class="mobile-nav">
+  <button class="active" data-page="dashboard"><span>⌂</span>Αρχική</button>
+  <button data-page="tasks"><span>☷</span>Εργασίες</button>
+  <button data-page="recommendations"><span>✧</span>Προτάσεις</button>
+  <button data-page="prediction"><span>◷</span>Πρόβλεψη</button>
+  <button data-page="settings"><span>⚙</span>Προφίλ</button>
+</nav>
+</div></div><div class="toast" id="toast"></div>
+<script>
+const today = new Date(); today.setHours(0,0,0,0);
+function datePlus(n){const d=new Date(today);d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+let tasks=[
+{id:1,title:"Επανάληψη: Εισαγωγή στον Προγραμματισμό",course:"Προγραμματισμός",due:datePlus(1),hours:2,difficulty:2,done:false},
+{id:2,title:"Παράδοση εργασίας στα Μαθηματικά",course:"Μαθηματικά",due:datePlus(3),hours:4,difficulty:3,done:false},
+{id:3,title:"Διάβασμα κεφαλαίου Μικροοικονομίας",course:"Μικροοικονομία",due:datePlus(5),hours:2,difficulty:1,done:false},
+{id:4,title:"Προετοιμασία quiz Στατιστικής",course:"Στατιστική",due:datePlus(2),hours:1,difficulty:2,done:false},
+{id:5,title:"Σημειώσεις προηγούμενης διάλεξης",course:"Πληροφορική",due:datePlus(-1),hours:1,difficulty:1,done:true}
+];
+let nextId=6;
+const $=id=>document.getElementById(id);
+const difficultyLabel=d=>({1:"Εύκολη",2:"Μέτρια",3:"Δύσκολη"}[d]||"Μέτρια");
+const priorityClass=t=>t.difficulty===3?"high":t.difficulty===2?"medium":"low";
+const priorityLabel=t=>t.difficulty===3?"Υψηλή":t.difficulty===2?"Μεσαία":"Χαμηλή";
+function daysLeft(t){return Math.ceil((new Date(t.due+"T00:00:00")-today)/86400000)}
+function dueText(t){const n=daysLeft(t);if(n<0)return `Εκπρόθεσμη κατά ${Math.abs(n)} ημ.`;if(n===0)return "Προθεσμία σήμερα";if(n===1)return "Αύριο";return `Σε ${n} ημέρες`}
+function score(t){const d=daysLeft(t);return (d<0?100:Math.max(0,10-d*2)) + t.difficulty*3 + Math.min(t.hours,10)*.7}
+function activeTasks(){return tasks.filter(t=>!t.done)}
+function sortedTasks(){return activeTasks().sort((a,b)=>score(b)-score(a))}
+function taskMarkup(t){return `<div class="task ${t.done?"done":""}"><button class="task-check" aria-label="${t.done?"Σήμανση ως μη ολοκληρωμένη":"Ολοκλήρωση εργασίας"}" data-toggle="${t.id}">${t.done?"✓":""}</button><div class="task-info"><div class="task-name">${escapeHtml(t.title)}</div><div class="task-meta">${escapeHtml(t.course)} · ${dueText(t)} · ${t.hours}h</div></div><span class="priority ${priorityClass(t)}">${priorityLabel(t)}</span></div>`}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function recommendationMarkup(t){if(!t)return `<div class="recommend"><h4>Όλα ολοκληρώθηκαν! 🎉</h4><p>Δεν υπάρχουν ενεργές εργασίες. Απόλαυσε το διάλειμμά σου ή πρόσθεσε μια νέα εργασία.</p></div>`;return `<div class="recommend"><div class="tag">✧ Προτεινόμενη προτεραιότητα</div><h4>${escapeHtml(t.title)}</h4><p>${escapeHtml(t.course)} · ${dueText(t)}. Υπολόγισε περίπου ${t.hours} ώρες. ${t.difficulty===3?"Είναι απαιτητική, γι’ αυτό ξεκίνα νωρίς.":"Μια μικρή συνεδρία θα σε βοηθήσει να προχωρήσεις."}</p><button class="btn small" data-toggle="${t.id}">✓ Σημείωση ως ολοκληρωμένη</button></div>`}
+function render(){
+ const active=activeTasks(), sorted=sortedTasks(), done=tasks.filter(t=>t.done);
+ $("stat-active").textContent=active.length;$("stat-done").textContent=done.length;
+ $("dashboard-tasks").innerHTML=(sorted.slice(0,3).map(taskMarkup).join("")||'<div class="empty">Δεν υπάρχουν ενεργές εργασίες.</div>');
+ $("daily-recommendation").innerHTML=recommendationMarkup(sorted[0]);
+ $("all-tasks").innerHTML=(tasks.slice().sort((a,b)=>Number(a.done)-Number(b.done)||daysLeft(a)-daysLeft(b)).map(taskMarkup).join("")||'<div class="empty">Δεν έχεις προσθέσει εργασίες ακόμη.</div>');
+ $("task-count").textContent=`${active.length} ενεργές · ${done.length} ολοκληρωμένες`;
+ $("best-pick").innerHTML=recommendationMarkup(sorted[0]);
+ $("study-plan").innerHTML=sorted.slice(0,3).map((t,i)=>`<div class="task"><div class="logo" style="width:30px;height:30px;border-radius:10px;font-size:13px">${i+1}</div><div class="task-info"><div class="task-name">${escapeHtml(t.title)}</div><div class="task-meta">${Math.min(t.hours,2)} ώρα/ες · ${escapeHtml(t.course)}</div></div><span class="priority ${priorityClass(t)}">${i===0?"Ξεκίνα εδώ":i===1?"Έπειτα":"Μετά"}</span></div>`).join("")||'<div class="empty">Πρόσθεσε μια εργασία για να δημιουργηθεί πλάνο.</div>';
+ $("risk-list").innerHTML=active.slice().sort((a,b)=>riskScore(b)-riskScore(a)).map(t=>{const r=riskLevel(t);return `<div class="risk-item"><div class="risk-top"><div class="risk-name">${escapeHtml(t.title)}</div><span class="risk-level risk-${r.key}">${r.label} κίνδυνος</span></div><p>${dueText(t)} · Εκτιμώμενος φόρτος: ${t.hours} ώρες. ${r.tip}</p><div class="progress" style="margin-top:12px"><span style="width:${r.pct}%;background:${r.key==="high"?"#df5e70":r.key==="medium"?"#ef9a45":"#20a997"}"></span></div></div>`}).join("")||'<div class="empty">Δεν υπάρχουν εκκρεμείς εργασίες.</div>';
+ document.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=()=>toggleTask(Number(b.dataset.toggle)));
+}
+function riskScore(t){return riskLevel(t).pct}
+function riskLevel(t){const d=daysLeft(t), ratio=t.hours/Math.max(1,d+1);let pct=Math.min(95,Math.max(8,Math.round(ratio*24+t.difficulty*13+(d<=1?25:d<=3?10:0))));if(d<0)pct=95;const key=pct>=65?"high":pct>=38?"medium":"low";return {pct,key,label:key==="high"?"Υψηλός":key==="medium"?"Μέτριος":"Χαμηλός",tip:key==="high"?"Πρότεινε να ξεκινήσεις σήμερα και να χωρίσεις την εργασία σε μικρότερα βήματα.":key==="medium"?"Προγραμμάτισε μια συγκεκριμένη συνεδρία μελέτης σύντομα.":"Ο διαθέσιμος χρόνος φαίνεται πιο άνετος, αλλά έλεγχε την πρόοδό σου."}}
+function toggleTask(id){const t=tasks.find(t=>t.id===id);if(!t)return;t.done=!t.done;render();toast(t.done?"Η εργασία σημειώθηκε ως ολοκληρωμένη.":"Η εργασία επέστρεψε στις εκκρεμότητες.");}
+function toast(msg){const el=$("toast");el.textContent=msg;el.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove("show"),2300)}
+function navigate(page){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));const titles={dashboard:"Καλησπέρα! 👋",tasks:"Οι εργασίες μου",recommendations:"Προτάσεις μελέτης",prediction:"Πρόβλεψη προθεσμιών",settings:"Προφίλ & στόχοι"};$("page-title").textContent=titles[page]||"StudyPulse";if(page==="recommendations"||page==="prediction")render();}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>navigate(b.dataset.page)));
+document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>navigate(b.dataset.goto)));
+$("show-add").onclick=()=>{$("add-panel").style.display="block";$("task-title").focus()};
+function closeAdd(){$("add-panel").style.display="none";$("task-form").reset()}
+$("hide-add").onclick=closeAdd;$("cancel-add").onclick=closeAdd;
+$("task-form").addEventListener("submit",e=>{e.preventDefault();const title=$("task-title").value.trim(),course=$("task-course").value.trim(),due=$("task-date").value,hours=Number($("task-hours").value),difficulty=Number($("task-difficulty").value);if(!title||!course||!due){toast("Συμπλήρωσε όλα τα υποχρεωτικά πεδία.");return}tasks.push({id:nextId++,title,course,due,hours,difficulty,done:false});closeAdd();render();toast("Η νέα εργασία προστέθηκε!");});
+$("refresh-recs").onclick=()=>{render();toast("Οι προτάσεις ενημερώθηκαν.");};
+$("save-settings").onclick=()=>{const name=$("student-name").value.trim()||"Φοιτητή";$("avatar").textContent=name.charAt(0).toUpperCase();$("page-title").textContent=`Καλησπέρα, ${name}! 👋`;toast("Οι προτιμήσεις αποθηκεύτηκαν για αυτή την επίσκεψη.");};
+render();
+</script>
+</body>
+</html>
